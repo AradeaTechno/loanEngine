@@ -1,0 +1,533 @@
+{
+	"info": {
+		"_postman_id": "9ca955b3-eb90-4feb-82a9-cd8346377375",
+		"name": "AMARTHA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30631763"
+	},
+	"item": [
+		{
+			"name": "STAFF",
+			"item": [
+				{
+					"name": "Create Staff",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "userIp",
+								"value": "123.123.123.123",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "staff_name",
+									"value": "Staff Full Name",
+									"description": "Staff full name",
+									"type": "text"
+								},
+								{
+									"key": "staff_email",
+									"value": "staff@email.com",
+									"description": "staff email",
+									"type": "text"
+								},
+								{
+									"key": "staff_role",
+									"value": "field_officer",
+									"description": "staff type (staff, field_officer)",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:7222/api/v1/staff/create",
+							"host": [
+								"localhost"
+							],
+							"port": "7222",
+							"path": [
+								"api",
+								"v1",
+								"staff",
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BORROWER",
+			"item": [
+				{
+					"name": "Create Borrower",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "userIp",
+								"value": "123.123.123.123",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "borrower_name",
+									"value": "Borrower Name",
+									"description": "borrower name",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:7222/api/v1/borrower/create",
+							"host": [
+								"localhost"
+							],
+							"port": "7222",
+							"path": [
+								"api",
+								"v1",
+								"borrower",
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "INVESTOR",
+			"item": [
+				{
+					"name": "Create Investor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "userIp",
+								"value": "123.123.123.123",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "investor_name",
+									"value": "investor name",
+									"description": "investor full name",
+									"type": "text"
+								},
+								{
+									"key": "investor_email",
+									"value": "investor@email.com",
+									"description": "investor email",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:7222/api/v1/investor/create",
+							"host": [
+								"localhost"
+							],
+							"port": "7222",
+							"path": [
+								"api",
+								"v1",
+								"investor",
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "LOAN",
+			"item": [
+				{
+					"name": "Create Loan",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "userIp",
+								"value": "123.123.123.123",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "created_by",
+									"value": "1",
+									"description": "Staff Who Create the loan",
+									"type": "text"
+								},
+								{
+									"key": "borrower_id",
+									"value": "2",
+									"description": "Borrower who need the loan",
+									"type": "text"
+								},
+								{
+									"key": "principal_amount",
+									"value": "100000000",
+									"description": "Principal Amount",
+									"type": "text"
+								},
+								{
+									"key": "rate",
+									"value": "3",
+									"description": "Rate",
+									"type": "text"
+								},
+								{
+									"key": "roi",
+									"value": "3",
+									"description": "ROI",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:7222/api/v1/loan/create",
+							"host": [
+								"localhost"
+							],
+							"port": "7222",
+							"path": [
+								"api",
+								"v1",
+								"loan",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "userIp",
+								"value": "123.123.123.123",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:7222/api/v1/loan/list/1",
+							"host": [
+								"localhost"
+							],
+							"port": "7222",
+							"path": [
+								"api",
+								"v1",
+								"loan",
+								"list",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "userIp",
+								"value": "123.123.123.123",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:7222/api/v1/loan/list",
+							"host": [
+								"localhost"
+							],
+							"port": "7222",
+							"path": [
+								"api",
+								"v1",
+								"loan",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Proof",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "userIp",
+								"value": "123.123.123.123",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "loan_id",
+									"value": "1",
+									"description": "Loan ID",
+									"type": "text"
+								},
+								{
+									"key": "staff_id",
+									"value": "1",
+									"description": "Staff ID",
+									"type": "text"
+								},
+								{
+									"key": "proof_pictures",
+									"description": "Multiple in picture formats",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:7222/api/v1/loan/proof",
+							"host": [
+								"localhost"
+							],
+							"port": "7222",
+							"path": [
+								"api",
+								"v1",
+								"loan",
+								"proof"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Approve",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "userIp",
+								"value": "123.123.123.123",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "loan_id",
+									"value": "1",
+									"description": "Loan ID",
+									"type": "text"
+								},
+								{
+									"key": "staff_id",
+									"value": "1",
+									"description": "Staff who approved",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:7222/api/v1/loan/approval",
+							"host": [
+								"localhost"
+							],
+							"port": "7222",
+							"path": [
+								"api",
+								"v1",
+								"loan",
+								"approval"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Loan Proof",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "userIp",
+								"value": "123.123.123.123",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:7222/api/v1/loan/proof/1",
+							"host": [
+								"localhost"
+							],
+							"port": "7222",
+							"path": [
+								"api",
+								"v1",
+								"loan",
+								"proof",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Disburse",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "userIp",
+								"value": "123.123.123.123",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "staff_id",
+									"value": "1",
+									"description": "Staff who hands the money and upload the signed agreement",
+									"type": "text"
+								},
+								{
+									"key": "loan_id",
+									"value": "1",
+									"description": "loan id",
+									"type": "text"
+								},
+								{
+									"key": "signed_agreement",
+									"description": "Signed agreement in pdf format",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:7222/api/v1/loan/disburse",
+							"host": [
+								"localhost"
+							],
+							"port": "7222",
+							"path": [
+								"api",
+								"v1",
+								"loan",
+								"disburse"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "INVESTMENT",
+			"item": [
+				{
+					"name": "Get Offered Loan",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "userIp",
+								"value": "123.123.123.123",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:7222/api/v1/investment/offered",
+							"host": [
+								"localhost"
+							],
+							"port": "7222",
+							"path": [
+								"api",
+								"v1",
+								"investment",
+								"offered"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Do Invest",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "userIp",
+								"value": "123.123.123.123",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "investor_id",
+									"value": "3",
+									"description": "Investor ID",
+									"type": "text"
+								},
+								{
+									"key": "loan_id",
+									"value": "1",
+									"description": "Loan ID to be invested",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "50000000",
+									"description": "Invest amount",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:7222/api/v1/investment/do-invest",
+							"host": [
+								"localhost"
+							],
+							"port": "7222",
+							"path": [
+								"api",
+								"v1",
+								"investment",
+								"do-invest"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
