@@ -34,6 +34,7 @@ Run the following command to install dependencies:
 ```bash
 go mod tidy
 ```
+Incase your application mod not changing, please open `go.mod` and change the modules name into your root project's name.
 
 ## Step 3: Environment Configuration
 Change env requirements with yours:
