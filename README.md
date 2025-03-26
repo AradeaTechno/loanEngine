@@ -55,7 +55,7 @@ Import this postman collection below to your postman.
 AMARTHA.postman_collection.json
 ```
 
-## Step 7: Database upload
+## Step 6: Database upload
 I've included all publics to be used on your postgre.
 ```bash
 dump-amarthaloan-202503261629.sql
