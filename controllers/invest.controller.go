@@ -19,7 +19,7 @@ func OfferLoan(c echo.Context) error {
 	if err != nil {
 		return c.JSON(code, helpers.ApiResponse(err, nil))
 	}
-	return c.JSON(code, offerLoan)
+	return c.JSON(code, helpers.ApiResponse(nil, offerLoan))
 }
 
 func DoInvest(c echo.Context) error {

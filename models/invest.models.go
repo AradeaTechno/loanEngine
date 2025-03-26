@@ -4,18 +4,29 @@ import (
 	"amarthaloan/config"
 	"amarthaloan/db"
 	"amarthaloan/helpers"
-	"errors"
 	"net/http"
+
+	"gorm.io/gorm/clause"
 )
 
-func GetOfferLoan() (helpers.Response, int, error) {
-	var objLoan []helpers.LoanStruct
-	var res helpers.Response
+type dataLoan struct {
+	BorrowerId      int `json:"borrower_id"`
+	PrincipalAmount int `json:"principal_amount"`
+	Rate            int `json:"rate"`
+	Roi             int `json:"roi"`
+}
+
+func GetOfferLoan() ([]dataLoan, int, error) {
+	var dataLoans []dataLoan
 	con := db.CreateConn()
-	if err := con.Where("state = ?", "approved").Find(&objLoan).Error; err != nil {
-		return res, http.StatusInternalServerError, err
+	if err := con.Table("loans").
+		Select("borrower_id, principal_amount, rate, roi").
+		Where("state = ?", "approved").
+		Find(&dataLoans).Error; err != nil {
+		return nil, http.StatusInternalServerError, err
 	}
-	return helpers.ApiResponse(errors.New("data retrieved"), objLoan), http.StatusOK, nil
+
+	return dataLoans, http.StatusOK, nil
 }
 
 func IsLoanOffer(loanId string) (string, int, int, error) {
@@ -34,9 +45,10 @@ func DoInvest(objLoan *helpers.LoanStruct, objInvest *helpers.InvestStruct, tota
 		return http.StatusInternalServerError, tx.Error
 	}
 
-	// LOCK CONDITION
-	if err := tx.Model(&objLoan).Where("loan_id = ? AND is_locked = FALSE", objInvest.LoanId).
-		Updates(map[string]any{"is_locked": true}).Error; err != nil {
+	// LOCK THE LOAN ROW
+	if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).
+		Where("loan_id = ?", objInvest.LoanId).
+		First(&objLoan).Error; err != nil {
 		tx.Rollback()
 		return http.StatusInternalServerError, err
 	}
@@ -65,14 +77,14 @@ func DoInvest(objLoan *helpers.LoanStruct, objInvest *helpers.InvestStruct, tota
 			tx.Rollback()
 			return http.StatusInternalServerError, err
 		}
+
 		// SEND EMAIL
-		// TAKE ALL INVESTORS
 		var objInvestor helpers.InvestorStruct
 		var emails []string
 		if err := tx.Model(&objInvestor).
 			Select("email").
 			Joins("INNER JOIN loans_investment ON loans_investment.investor_id = investor.investor_id").
-			Where("loans_investment.loan_id = ? ", objInvest.LoanId).
+			Where("loans_investment.loan_id = ?", objInvest.LoanId).
 			Pluck("email", &emails).Error; err != nil {
 			tx.Rollback()
 			return http.StatusInternalServerError, err
@@ -88,17 +100,9 @@ func DoInvest(objLoan *helpers.LoanStruct, objInvest *helpers.InvestStruct, tota
 			emailData.TeamEmail = "team@email.com"
 			go helpers.SendEmail(*emailData)
 		}
-
 	}
 
-	// RELEASE THE LOCK
-	if err := tx.Model(&objLoan).Where("loan_id = ?", objInvest.LoanId).
-		Updates(map[string]any{"is_locked": false}).Error; err != nil {
-		tx.Rollback()
-		return http.StatusInternalServerError, err
-	}
-
-	// COMMIT THE CHANGE
+	// COMMIT THE TRANSACTION
 	if err := tx.Commit().Error; err != nil {
 		return http.StatusInternalServerError, err
 	}

@@ -4,6 +4,8 @@ import (
 	"amarthaloan/db"
 	"amarthaloan/helpers"
 	"net/http"
+
+	"gorm.io/gorm/clause"
 )
 
 func Disburse(objDisburse *helpers.DisburseStruct) (int, error) {
@@ -15,9 +17,10 @@ func Disburse(objDisburse *helpers.DisburseStruct) (int, error) {
 		return http.StatusInternalServerError, tx.Error
 	}
 
-	// LOCK CONDITION
-	if err := tx.Model(&objLoan).Where("loan_id = ? AND is_locked = FALSE", objDisburse.LoanId).
-		Updates(map[string]any{"is_locked": true}).Error; err != nil {
+	// LOCK THE LOAN ROW
+	if err := tx.Clauses(clause.Locking{Strength: "UPDATE"}).
+		Where("loan_id = ?", objDisburse.LoanId).
+		First(&objLoan).Error; err != nil {
 		tx.Rollback()
 		return http.StatusInternalServerError, err
 	}
@@ -36,13 +39,6 @@ func Disburse(objDisburse *helpers.DisburseStruct) (int, error) {
 	}
 	// UPDATE LOAN DATA
 	if err := tx.Model(&objLoan).Where("loan_id = ?", objDisburse.LoanId).Updates(disburse).Error; err != nil {
-		tx.Rollback()
-		return http.StatusInternalServerError, err
-	}
-
-	// RELEASE THE LOCK
-	if err := tx.Model(&objLoan).Where("loan_id = ?", objDisburse.LoanId).
-		Updates(map[string]any{"is_locked": false}).Error; err != nil {
 		tx.Rollback()
 		return http.StatusInternalServerError, err
 	}
