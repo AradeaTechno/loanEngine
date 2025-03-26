@@ -34,6 +34,13 @@ func DoInvest(objLoan *helpers.LoanStruct, objInvest *helpers.InvestStruct, tota
 		return http.StatusInternalServerError, tx.Error
 	}
 
+	// LOCK CONDITION
+	if err := tx.Model(&objLoan).Where("loan_id = ? AND is_locked = FALSE", objInvest.LoanId).
+		Updates(map[string]any{"is_locked": true}).Error; err != nil {
+		tx.Rollback()
+		return http.StatusInternalServerError, err
+	}
+
 	// CREATE DATA INVESTMENT
 	if err := tx.Create(&objInvest).Error; err != nil {
 		tx.Rollback()
@@ -82,6 +89,13 @@ func DoInvest(objLoan *helpers.LoanStruct, objInvest *helpers.InvestStruct, tota
 			go helpers.SendEmail(*emailData)
 		}
 
+	}
+
+	// RELEASE THE LOCK
+	if err := tx.Model(&objLoan).Where("loan_id = ?", objInvest.LoanId).
+		Updates(map[string]any{"is_locked": false}).Error; err != nil {
+		tx.Rollback()
+		return http.StatusInternalServerError, err
 	}
 
 	// COMMIT THE CHANGE

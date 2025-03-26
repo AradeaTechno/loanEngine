@@ -7,11 +7,19 @@ import (
 )
 
 func Disburse(objDisburse *helpers.DisburseStruct) (int, error) {
+	var objLoan helpers.LoanStruct
 
 	con := db.CreateConn()
 	tx := con.Begin()
 	if tx.Error != nil {
 		return http.StatusInternalServerError, tx.Error
+	}
+
+	// LOCK CONDITION
+	if err := tx.Model(&objLoan).Where("loan_id = ? AND is_locked = FALSE", objDisburse.LoanId).
+		Updates(map[string]any{"is_locked": true}).Error; err != nil {
+		tx.Rollback()
+		return http.StatusInternalServerError, err
 	}
 
 	// SAVE DISBURSE
@@ -20,7 +28,6 @@ func Disburse(objDisburse *helpers.DisburseStruct) (int, error) {
 		return http.StatusInternalServerError, err
 	}
 
-	var objLoan helpers.LoanStruct
 	disburse := map[string]any{
 		"state":             "disburse",
 		"disbursed_by":      objDisburse.StaffId,
@@ -29,6 +36,13 @@ func Disburse(objDisburse *helpers.DisburseStruct) (int, error) {
 	}
 	// UPDATE LOAN DATA
 	if err := tx.Model(&objLoan).Where("loan_id = ?", objDisburse.LoanId).Updates(disburse).Error; err != nil {
+		tx.Rollback()
+		return http.StatusInternalServerError, err
+	}
+
+	// RELEASE THE LOCK
+	if err := tx.Model(&objLoan).Where("loan_id = ?", objDisburse.LoanId).
+		Updates(map[string]any{"is_locked": false}).Error; err != nil {
 		tx.Rollback()
 		return http.StatusInternalServerError, err
 	}
